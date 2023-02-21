@@ -3,11 +3,11 @@ export const historyStore = (set, get) => ({
   counter: 0,
   pustToHistory: (item) => {
     set((state) => ({
-      history: [...state.history, item],
+      history: [item, ...state.history],
     }))
   },
   selectedHistory: () => {
-    return get().history[(get().history.length - 1) - (get().counter - 1)]
+    return get().history[get().counter - 1]
   },
   increment: () => {
     set((state) => {
@@ -15,9 +15,9 @@ export const historyStore = (set, get) => ({
         const historyLength = state.history.length
         return {
           counter:
-            historyLength - 1 === state.counter
-              ? state.counter + 1
-              : historyLength,
+            historyLength === state.counter
+              ? historyLength
+              : state.counter + 1,
         }
       } else {
         return {
