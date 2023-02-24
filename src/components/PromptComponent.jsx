@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
+
+import { commandExists } from "../services"
+
 import { useHistoryStore } from "../stores"
 
 export const Prompt = () => {
@@ -9,12 +12,18 @@ export const Prompt = () => {
 
   const [hostname, setHostname] = useState("")
   const [command, setCommand] = useState("")
+  const [isExist, setIsExist] = useState(false)
 
   const username = "guest"
 
   useEffect(() => {
     setHostname(location.hostname)
   }, [])
+
+  useEffect(() => {
+    const firstCommand = command.split(" ")[0]
+    setIsExist(commandExists(firstCommand))
+  }, [command])
 
   const handleInput = useCallback((event) => {
     setCommand(event.target.value)
@@ -50,7 +59,8 @@ export const Prompt = () => {
       </div>
       <form className='ml-3 f-full' onSubmit={(event) => handleRun(event)}>
         <input
-          className='bg-transparent border-none outline-none w-full'
+          className={`bg-transparent border-none outline-none w-full ${isExist ? "text-monokai-green" : ""
+            }`}
           type='text'
           autoFocus={true}
           autoComplete='off'
